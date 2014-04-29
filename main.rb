@@ -5,10 +5,10 @@ require 'sinatra/reloader'
 set :sessions, true
 
 get '/' do
-  erb :boots
+  erb :get_name
 end
 
-post '/myaction' do
+post '/get_name' do
   puts params[:username]
 end
 
