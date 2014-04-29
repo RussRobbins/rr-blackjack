@@ -1,0 +1,14 @@
+get / -> /name to get username
+post /name -> stores it and starting cash, -> /bet
+
+get /bet checks for cash==0, and for warning, then asks for bet amount
+ - if cash==0 show msg and allow them to start over -> /
+post /bet validates bet amt isn't > cash
+ - if so, -> /bet with warning param
+ - otherwise, -> /game
+
+get /game is main layout for game
+ - deals cards and displays them (with first dealer card face down)
+ - Provides status and query, Hit and Stay buttons
+
+post /game looks for cmd param and acts on Hit or Stay or Dealer Hit or Dealer Stay
