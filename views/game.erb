@@ -1,0 +1,32 @@
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
+  </head>
+  <body>
+
+    <div class="container">
+      <div class="alert alert-error">
+        <h2 align='center'>Welcome to Blackjack, <%= session[:username] %>!</h2>
+      </div>
+      <div class="row-fluid">
+        <div class="span3 alert alert-info">
+          <form action='/get_bet' method='post'>
+            <b>Your cash balance: $<%= session[:cash] %></b>
+          </form>
+        </div>
+        <div class="span9 alert alert-success">
+          <h4>Dealer's cards</h4>
+        </div>
+      </div>
+      <div class="row-fluid">
+        <div class="span9 offset3 alert alert-success">
+          <h4><%= session[:username] %>'s cards</h4>
+        </div>
+      </div>
+    </div>
+
+  </body>
+</html>
