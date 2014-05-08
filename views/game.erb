@@ -8,24 +8,64 @@
   <body>
 
     <div class="container">
-      <div class="alert alert-error">
-        <h2 align='center'>Welcome to Blackjack, <%= session[:username] %>!</h2>
+
+      <div id='notification_area'>
+        <% if @win %>
+          <div class="alert alert-success"><%=@win%></div>
+        <% elsif @lose %>
+          <div class="alert alert-error"><%=@lose%></div>
+        <% else %>
+          <div class="alert alert-info">
+            <h2 align='center'>Welcome to Blackjack, <%= session[:username] %>!</h2>
+          </div>
+        <% end %>
       </div>
-      <div class="row-fluid">
-        <div class="span3 alert alert-info">
+
+      <div id='betting_area' class="row-fluid">
+        <div class="span2 alert alert-info">
           <form action='/get_bet' method='post'>
-            <b>Your cash balance: $<%= session[:cash] %></b>
+            <h4>Cash: $<%= session[:cash] %></h4>
+            <br>
+            <h4>Bet: $<%= session[:bet] %></h4>
           </form>
         </div>
-        <div class="span9 alert alert-success">
+
+        <div id='dealer_area' class="span10 alert alert-success">
           <h4>Dealer's cards</h4>
+          <div class='cards_area'>
+            <% if @show_dealer_hole_card == false %>
+              <%= draw_cover() %>
+              <%= draw_card(session[:dealer_cards][1]) %>
+            <% else %>
+              <% session[:dealer_cards].each do |card| %>
+                <%= draw_card(card) %>
+              <% end %>
+            <% end %>
+          </div>
         </div>
       </div>
+
       <div class="row-fluid">
-        <div class="span9 offset3 alert alert-success">
+        <div id='player_area' class="span10 offset2 alert alert-success">
           <h4><%= session[:username] %>'s cards</h4>
+          <div class='cards_area'>
+            <% session[:player_cards].each do |card| %>
+              <%= draw_card(card) %>
+            <% end %>
+          </div>
+          <% if @show_player_controls == true && count(session[:player_cards]) < 21 %>
+            <h3><%= session[:username] %> has <%= count(session[:player_cards]) %>. Hit or stay?</h3>
+            <form class="float_button" id="hit" action="/hit" method="POST">
+              <input type="submit" value=" Hit " class="btn btn-primary btn-large">
+            </form>
+            <form class="float_button" id="stay" action="/stay" method="POST">
+              <input type="submit" value="Stay" class="btn btn-inverse btn-large">
+            </form>
+          <% end %>
+
         </div>
       </div>
+
     </div>
 
   </body>
