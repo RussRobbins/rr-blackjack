@@ -13,6 +13,7 @@ before do
   @show_dealer_hole_card = false
   @show_player_controls = true
   @show_dealer_controls = false
+  @play_again = false
 end
 
 # Helper methods
@@ -60,20 +61,41 @@ helpers do
     total
   end
 
-  def win!(text)
+  def setup_endgame
     @show_dealer_hole_card = true
     @show_player_controls = false
     @show_dealer_controls = false
+    @play_again = true
+  end
+
+  def win!(text)
+    setup_endgame
     session[:cash] += session[:bet]
     @win = "#{text}"
   end
 
   def lose!(text)
-    @show_dealer_hole_card = true
-    @show_player_controls = false
-    @show_dealer_controls = false
+    setup_endgame
     session[:cash] -= session[:bet]
     @lose = "#{text}"
+  end
+
+  def draw!(text)
+    setup_endgame
+    @draw = "#{text}"
+  end
+
+  # This is only called if both player and dealer have both stayed and not busted or hit 21
+  def endgame()
+    pval = count(session[:player_cards])
+    dval = count(session[:dealer_cards])
+    if pval > dval
+      win!("<h3>#{session[:username]}'s #{pval} beats the dealer's #{dval}! #{session[:username]} won $#{session[:bet]}.</h3>")
+    elsif dval > pval
+      lose!("<h3>The dealer's #{dval} beats #{session[:username]}'s #{pval}! #{session[:username]} lost $#{session[:bet]}.</h3>")
+    else
+      draw!("<h3>It's a DRAW! Both #{session[:username]} and the dealer have #{pval}.</h3>")
+    end
   end
 
 end
@@ -148,9 +170,28 @@ post '/hit' do
 end
 
 post '/stay' do
+  total = count(session[:dealer_cards])
+  if total >= DEALER_HIT_BELOW
+    endgame
+  end
   @show_dealer_hole_card = true
   @show_player_controls = false
   @show_dealer_controls = true
   erb :game
 end
 
+post '/dealer_hit' do
+  session[:dealer_cards] << session[:deck].pop
+  total = count(session[:dealer_cards])
+  if total == BLACKJACK
+    lose!("<h3>The dealer GOT 21! #{session[:username]} lost $#{session[:bet]}.</h3>")
+  elsif total > BLACKJACK
+    win!("<h3>THE DEALER HAS BUSTED AT #{total}! #{session[:username]} won $#{session[:bet]}.</h3>")
+  elsif total >= DEALER_HIT_BELOW
+    endgame
+  end
+  @show_dealer_controls = true
+  @show_dealer_hole_card = true
+  @show_player_controls = false
+  erb :game
+end
