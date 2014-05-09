@@ -4,6 +4,8 @@
     <title>Blackjack!</title>
     <link rel="stylesheet" href="/vendor/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="/application.css">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="/application.js"></script>
     <style>
     .container {font-family: 'Calibri'}
     .page {
@@ -20,7 +22,10 @@
         <div class="container">
             <ul class="nav">
               <li><a href="/restart">Start Over</a></li>
-              <!-- <li><a href="/bet">New Round</a></li> -->
+              <% if @play_again %>
+                <li><a href="/bet"><b>Change Bet</b></a></li>
+                <li><a href="/game"><b>Same Bet</b></a></li>
+              <% end %>
             </ul>
         </div>
       </div>

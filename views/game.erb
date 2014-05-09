@@ -1,4 +1,5 @@
-<html>
+<div id='game'>
+  <html>
   <head>
     <title></title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -23,15 +24,18 @@
           </div>
         -->
         <% end %>
+        <!--
         <% if @play_again == true %>
           <div class="alert alert-info">
-            <h3>
-              <form id="play_again" action="/bet">
-                <input type="submit" value=" Play Again" class="btn btn-primary btn-large btn-block">
+              <form id="change_bet_form" action="/bet">
+                <input type="submit" value="Change Bet" class="btn btn-primary btn-large btn-block">
               </form>
-            </h3>
+              <form id="same_bet_form" action="/game">
+                <input type="submit" value="Same Bet" class="btn btn-primary btn-large btn-block">
+              </form>
           </div>
         <% end %>
+        -->
       </div>
 
       <% if @play_again == false %>
@@ -58,7 +62,7 @@
           <% if @show_dealer_controls == true %>
             <% if count(session[:dealer_cards]) < DEALER_HIT_BELOW %>
               <h3>The dealer has <%= count(session[:dealer_cards]) %> and will hit.</h3>
-              <form class="float_button" id="dealer_hit" action="/dealer_hit" method="POST">
+              <form class="float_button" id="dealer_hit_form" action="/dealer_hit" method="POST">
                 <input type="submit" value="Deal the next card" class="btn btn-primary">
               </form>
             <% elsif count(session[:dealer_cards]) > BLACKJACK %>
@@ -80,10 +84,10 @@
           </div>
           <% if @show_player_controls == true && count(session[:player_cards]) < BLACKJACK %>
             <h3><%= session[:username] %> has <%= count(session[:player_cards]) %>. Hit or stay?</h3>
-            <form class="float_button" id="hit" action="/hit" method="POST">
+            <form class="float_button" id="hit_form" action="/hit" method="POST">
               <input type="submit" value=" Hit " class="btn btn-primary btn-large">
             </form>
-            <form class="float_button" id="stay" action="/stay" method="POST">
+            <form class="float_button" id="stay_form" action="/stay" method="POST">
               <input type="submit" value="Stay" class="btn btn-inverse btn-large">
             </form>
           <% else %>
@@ -96,4 +100,5 @@
     </div>
 
   </body>
-</html>
+  </html>
+</div>
