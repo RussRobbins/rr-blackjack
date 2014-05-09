@@ -17,11 +17,13 @@
         <% elsif @draw %>
           <div class="alert alert-warning"><%=@draw%></div>
         <% else %>
+        <!--
           <div class="alert alert-info">
             <h2 align='center'>Welcome to Blackjack, <%= session[:username] %>!</h2>
           </div>
+        -->
         <% end %>
-        <% if @play_again %>
+        <% if @play_again == true %>
           <div class="alert alert-info">
             <h3>
               <form id="play_again" action="/bet">
@@ -32,16 +34,16 @@
         <% end %>
       </div>
 
-      <div id='betting_area' class="row-fluid">
-        <div class="span2 alert alert-info">
-          <form action='/get_bet' method='post'>
-            <h4>Cash: $<%= session[:cash] %></h4>
-            <br>
-            <h4>Bet: $<%= session[:bet] %></h4>
-          </form>
+      <% if @play_again == false %>
+        <div id='betting_area' class="row-fluid">
+          <div class="span12 alert alert-info">
+            <h3 align='center'>Total Cash: $<%= session[:cash] %> &nbsp;&nbsp;&nbsp;&nbsp; Current bet: $<%= session[:bet] %></h3>
+          </div>
         </div>
+      <% end %>
 
-        <div id='dealer_area' class="span10 alert alert-success">
+      <div class="row-fluid">
+        <div id='dealer_area' class="span12 alert alert-success">
           <h4>Dealer's cards</h4>
           <div class='cards_area'>
             <% if @show_dealer_hole_card == false %>
@@ -69,7 +71,7 @@
       </div>
 
       <div class="row-fluid">
-        <div id='player_area' class="span10 offset2 alert alert-success">
+        <div id='player_area' class="span12 alert alert-success">
           <h4><%= session[:username] %>'s cards</h4>
           <div class='cards_area'>
             <% session[:player_cards].each do |card| %>

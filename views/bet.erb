@@ -8,28 +8,27 @@
   <body>
 
     <div class="container">
-      <div class="alert alert-error">
-        <h2 align='center'>Welcome to Blackjack, <%= session[:username] %>!</h2>
-      </div>
       <div class="row-fluid">
         <% if session[:cash] <= 0 %>
-          <div class="span2 alert alert-error">
-            <h4>Cash: $<%= session[:cash] %></h4>
-            Oh noes, you're out of cash! Come back later when you have more to lose.
+          <div class="span12 alert alert-error">
+            <h3>Total Cash: $<%= session[:cash] %></h3>
+            <h4>Oh noes, you're out of cash! Come back later when you have more to lose.</h4>
           </div>
         <% else %>
-          <div class="span2 alert alert-info">
-            <h4>Cash: $<%= session[:cash] %></h4>
-            <br>
-            <form action='/bet' method='post'>
-              Amount to bet:
+          <div class="span12 alert alert-info">
+            <h2 align='center'>Welcome to Blackjack, <%= session[:username] %>!</h2>
+              <form action='/bet' method='post'>
+              <h3 align='center'>Total Cash: $<%= session[:cash] %> &nbsp;&nbsp; Amount to bet:
               <input type='text' name='bet_amt' class='input-small'/>
-              <br>
-              <input type='submit' value='Place bet' action='post'/>
-            </form>
+              <input class='btn-info' style='margin-left: 10px;' type='submit' value='Place bet' action='post'/>
+              </form>
+            </h3>
           </div>
         <% end %>
-        <div id='dealer_area' class="span10 alert alert-success">
+      </div>
+
+      <div class="row-fluid">
+        <div id='dealer_area' class="span12 alert alert-success">
           <h4>Dealer's cards</h4>
           <div class='cards_area'>
             <%= draw_cover() %>
@@ -39,7 +38,7 @@
       </div>
 
       <div class="row-fluid">
-        <div id='player_area' class="span10 offset2 alert alert-success">
+        <div id='player_area' class="span12 alert alert-success">
           <h4><%= session[:username] %>'s cards</h4>
           <div class='cards_area'>
             <%= draw_cover() %>

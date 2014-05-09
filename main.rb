@@ -90,9 +90,9 @@ helpers do
     pval = count(session[:player_cards])
     dval = count(session[:dealer_cards])
     if pval > dval
-      win!("<h3>#{session[:username]}'s #{pval} beats the dealer's #{dval}! #{session[:username]} won $#{session[:bet]}.</h3>")
+      win!("<h3>#{session[:username]}'s #{pval} beats the dealer's #{dval}! #{session[:username]} won $#{session[:bet]} and now has $#{session[:cash]+session[:bet]}.</h3>")
     elsif dval > pval
-      lose!("<h3>The dealer's #{dval} beats #{session[:username]}'s #{pval}! #{session[:username]} lost $#{session[:bet]}.</h3>")
+      lose!("<h3>The dealer's #{dval} beats #{session[:username]}'s #{pval}! #{session[:username]} lost $#{session[:bet]} and now has $#{session[:cash]-session[:bet]}.</h3>")
     else
       draw!("<h3>It's a DRAW! Both #{session[:username]} and the dealer have #{pval}.</h3>")
     end
@@ -121,8 +121,13 @@ get '/get_name' do
 end
 
 post '/get_name' do
-  session[:username] = params[:username]
-  redirect '/bet'
+  if  params[:username] == nil || params[:username] == ""
+    @error = "<h3>You must enter a name. Try again.</h3>"
+    erb :get_name
+  else
+    session[:username] = params[:username]
+    redirect '/bet'
+  end
 end
 
 get '/bet' do
@@ -149,9 +154,9 @@ get '/game' do
   session[:dealer_cards] = []
   initial_deal(session[:player_cards], session[:dealer_cards], session[:deck])
   if count(session[:player_cards]) == 21
-    win!("<h3>#{session[:username]} GOT BLACKJACK! #{session[:username]} won $#{session[:bet]}.</h3>")
+    win!("<h3>#{session[:username]} GOT BLACKJACK! #{session[:username]} won $#{session[:bet]} and now has $#{session[:cash]+session[:bet]}.</h3>")
   elsif count(session[:dealer_cards]) == 21
-    lose!("<h3>THE DEALER GOT BLACKJACK! #{session[:username]} lost $#{session[:bet]}.</h3>")
+    lose!("<h3>THE DEALER GOT BLACKJACK! #{session[:username]} lost $#{session[:bet]} and now has $#{session[:cash]-session[:bet]}.</h3>")
 
     
   end
@@ -162,9 +167,9 @@ post '/hit' do
   session[:player_cards] << session[:deck].pop
   total = count(session[:player_cards])
   if total == BLACKJACK
-    win!("<h3>#{session[:username]} GOT 21! #{session[:username]} won $#{session[:bet]}.</h3>")
+    win!("<h3>#{session[:username]} GOT 21! #{session[:username]} won $#{session[:bet]} and now has $#{session[:cash]+session[:bet]}.</h3>")
   elsif total > BLACKJACK
-    lose!("<h3>#{session[:username]} HAS BUSTED AT #{total}! #{session[:username]} lost $#{session[:bet]}.</h3>")
+    lose!("<h3>#{session[:username]} HAS BUSTED AT #{total}! #{session[:username]} lost $#{session[:bet]} and now has $#{session[:cash]-session[:bet]}.</h3>")
   end
   erb :game
 end
@@ -184,9 +189,9 @@ post '/dealer_hit' do
   session[:dealer_cards] << session[:deck].pop
   total = count(session[:dealer_cards])
   if total == BLACKJACK
-    lose!("<h3>The dealer GOT 21! #{session[:username]} lost $#{session[:bet]}.</h3>")
+    lose!("<h3>The dealer GOT 21! #{session[:username]} lost $#{session[:bet]} and now has $#{session[:cash]-session[:bet]}.</h3>")
   elsif total > BLACKJACK
-    win!("<h3>THE DEALER HAS BUSTED AT #{total}! #{session[:username]} won $#{session[:bet]}.</h3>")
+    win!("<h3>THE DEALER HAS BUSTED AT #{total}! #{session[:username]} won $#{session[:bet]} and now has $#{session[:cash]+session[:bet]}.</h3>")
   elsif total >= DEALER_HIT_BELOW
     endgame
   end
