@@ -1,5 +1,5 @@
 require 'rubygems'
-#require 'sinatra'
+require 'sinatra'
 #require 'sinatra/reloader'
 
 set :sessions, true
@@ -149,6 +149,9 @@ post '/bet' do
 end
 
 get '/game' do
+  if session[:cash] <= 0
+    redirect '/bet'
+  end
   session[:deck] = init_deck
   session[:player_cards] = []
   session[:dealer_cards] = []
